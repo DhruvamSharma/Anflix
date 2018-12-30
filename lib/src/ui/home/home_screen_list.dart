@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:popular_movies/src/bloc/movies_bloc.dart';
 import 'package:popular_movies/src/ui/detail/detail.dart';
-import '../../models/item_model.dart';
+import '../../models/result.dart';
 import 'package:rxdart/rxdart.dart';
 
 class HomeScreenList extends StatefulWidget {
@@ -11,7 +11,6 @@ class HomeScreenList extends StatefulWidget {
 
 class HomeScreenListState extends State<HomeScreenList> {
 
-
   @override
   void initState() {
     // TODO: implement initState
@@ -20,21 +19,16 @@ class HomeScreenListState extends State<HomeScreenList> {
   }
 
   @override
+  void dispose() {
+    super.dispose();
+    bloc.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
 
-    final grid = GridView.count(
-      crossAxisCount: 2,
-      padding: EdgeInsets.all(16),
-
-      children: <Widget>[
-        Text("MyData"),
-        Text("My data again"),
-      ],
-    );
-
-
     final streamBuilder = StreamBuilder(
-        builder: (BuildContext context, AsyncSnapshot<ItemModel> snapshot) {
+        builder: (BuildContext context, AsyncSnapshot<Result> snapshot) {
           if(snapshot.hasData) {
             return buildList(snapshot);
           } else if(snapshot.hasError) {
@@ -51,21 +45,26 @@ class HomeScreenListState extends State<HomeScreenList> {
     return streamBuilder;
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-    bloc.dispose();
-  }
 
-  Widget buildList(AsyncSnapshot<ItemModel> snapshot) {
+
+  Widget buildList(AsyncSnapshot<Result> snapshot) {
+
+    var crossAxisCount;
+
+    if(MediaQuery.of(context).orientation == Orientation.portrait) {
+      crossAxisCount = 2;
+    } else {
+      crossAxisCount = 3;
+    }
+
     return GridView.builder(
         itemCount: snapshot.data.results.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: 2,
+            crossAxisCount: crossAxisCount,
         ),
         itemBuilder: (BuildContext context, int index) {
-          if(index == 0 || index == 1) {
-            return Text("Start");
+          if(index == 0) {
+            crossAxisCount = 1;
           }
           return Hero(
             tag: snapshot.data.results[index].id,
@@ -84,18 +83,20 @@ class HomeScreenListState extends State<HomeScreenList> {
         });
   }
 
-  moveToDetailScreen(int index, ItemModel model) {
+  moveToDetailScreen(int index, Result model) {
 
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) {
         return DetailScreen(
-          id: model.results[index].id,
-          imageUrl: 'https://image.tmdb.org/t/p/w185${model.results[index].poster_path}',
+          model: model.results[index],
         );
       }),
     );
   }
+
+
+
 
 
 }

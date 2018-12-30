@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         primaryColor: Colors.black,
         brightness: Brightness.dark,
+        canvasColor: Colors.transparent,
       ),
       home: HomeScreen(),
     );

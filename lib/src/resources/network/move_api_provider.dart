@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:http/http.dart' show Client;
-import 'package:popular_movies/src/models/item_model.dart';
+import 'package:popular_movies/src/models/result.dart';
 
 
 class MovieApiProvider {
@@ -10,10 +10,10 @@ class MovieApiProvider {
   static final _api_key  = '5d5b4588dc71d0e50c29f2caa9221fa0';
   final _url = 'http://api.themoviedb.org/3/movie/popular?api_key=$_api_key';
 
-  Future<ItemModel> fetchMovieList() async {
+  Future<Result> fetchMovieList() async {
     final response = await _client.get(_url);
     if(response.statusCode == 200) {
-      return ItemModel.fromJson(json.decode(response.body));
+      return Result.fromJson(json.decode(response.body));
     } else {
       throw Exception('failed to  fetch movies');
     }

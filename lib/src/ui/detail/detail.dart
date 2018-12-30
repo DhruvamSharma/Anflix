@@ -1,40 +1,89 @@
 import 'package:flutter/material.dart';
+import 'package:popular_movies/src/models/item_model.dart';
 
 class DetailScreen extends StatelessWidget {
 
-  final int id;
-  final String imageUrl;
+  final ItemModel model;
 
   const DetailScreen({
     Key key,
-    @required this.id,
-    @required this.imageUrl,
-}):assert(id != null),
-  assert(imageUrl != null),
+    @required this.model,
+}):assert(model != null),
   super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    // TODO: implement build
 
-    return Scaffold(
-      appBar: AppBar(),
-      body: Container(
-        child: Hero(
-          transitionOnUserGestures: true,
-          tag: this.id,
-          child: Image.network(
-            imageUrl,
+
+    var child = <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  model.title,
+                  style: TextStyle(
+                    fontSize: 24,
+                    color: Colors.grey,
+                  ),
+                ),
+                Text(model.release_date),
+                Text(model.overview),
+                Text(model.overview),
+                Text(model.overview),
+                Text(model.overview),
+                Text(model.overview),
+                Text(model.overview),
+                similarMoviesGrid(model.genre_ids),
+              ],
+            ),
           ),
-          placeholderBuilder: (context, widget) {
-            return Container(
-              height: 150.0,
-              width: 150.0,
-              child: CircularProgressIndicator(),
-            );
-          },
-        ),
+        ];
+
+    var background = Hero(
+      transitionOnUserGestures: true,
+      tag: model.id,
+      child: Image.network(
+        'https://image.tmdb.org/t/p/w185${model
+            .poster_path}',
+        fit: BoxFit.fill,
+        width: double.infinity,
+        height: 300,
       ),
     );
+
+    return Scaffold(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            pinned: true,
+            expandedHeight: 300.0, // TODO: check out later
+            flexibleSpace: FlexibleSpaceBar(
+              background: background,
+            ),
+          ),
+          
+          SliverList(delegate: SliverChildListDelegate(child))
+
+
+        ],
+
+      ),
+    );
+
+
+
+
+
   }
+
+  similarMoviesGrid(List<int> genre_ids) {
+    //Code a Grid Widget here
+
+  }
+
+
+
+
 }
