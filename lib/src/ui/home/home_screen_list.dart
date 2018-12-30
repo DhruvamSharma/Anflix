@@ -69,6 +69,7 @@ class HomeScreenListState extends State<HomeScreenList> {
           }
           return Hero(
             tag: snapshot.data.results[index].id,
+            transitionOnUserGestures: true,
             child: GestureDetector(
               onTap: () {
                 moveToDetailScreen(index, snapshot.data);
@@ -90,7 +91,7 @@ class HomeScreenListState extends State<HomeScreenList> {
       MaterialPageRoute(builder: (context) {
         return DetailScreen(
           id: model.results[index].id,
-          imageUrl: model.results[index].poster_path,
+          imageUrl: 'https://image.tmdb.org/t/p/w185${model.results[index].poster_path}',
         );
       }),
     );

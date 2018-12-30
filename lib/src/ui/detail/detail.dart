@@ -17,9 +17,24 @@ class DetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     // TODO: implement build
 
-    return Hero(
-        tag: this.id,
-        child: Image.network(imageUrl),
+    return Scaffold(
+      appBar: AppBar(),
+      body: Container(
+        child: Hero(
+          transitionOnUserGestures: true,
+          tag: this.id,
+          child: Image.network(
+            imageUrl,
+          ),
+          placeholderBuilder: (context, widget) {
+            return Container(
+              height: 150.0,
+              width: 150.0,
+              child: CircularProgressIndicator(),
+            );
+          },
+        ),
+      ),
     );
   }
 }
