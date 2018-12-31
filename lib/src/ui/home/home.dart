@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:popular_movies/src/bloc/movies_bloc.dart';
 import 'package:popular_movies/src/ui/home/home_screen_list.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -7,6 +8,9 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
+
+  var bloc = MoviesBloc();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -26,7 +30,7 @@ class HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      body: HomeScreenList(),
+      body: HomeScreenList(callback: modalBottomSheetMenu),
     );
   }
 
@@ -44,11 +48,12 @@ class HomeScreenState extends State<HomeScreen> {
                     borderRadius: new BorderRadius.only(
                         topLeft: const Radius.circular(10.0),
                         topRight: const Radius.circular(10.0))),
-                child: GestureDetector(
-                    child: Text("My data"),
-                  onTap: () {
-
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: RaisedButton(onPressed: () {
+                    bloc.fetchTopRatedMovies();
                   },
+                  splashColor: Colors.red,),
                 ),
             ),
           );

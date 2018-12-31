@@ -24,7 +24,15 @@ class MovieApiProvider {
 
   }
 
-  fetchTopRatedMovieList() async {
+  Future<Result> fetchTopRatedMovieList() async {
+
+    final response = await _client.get(_top_rated);
+    if(response.statusCode == 200) {
+      print("here");
+      return Result.fromJson(json.decode(response.body));
+    } else {
+      throw Exception('failed to  fetch movies');
+    }
 
   }
 

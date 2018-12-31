@@ -9,4 +9,6 @@ class MoviesRepository {
 
   fetchAllSimilarMovies(genreIdeas) async => await _movieApiProvider.fetchMoviesLikeThis(genreIdeas);
 
+  fetchTopRatedMovies() async => await _movieApiProvider.fetchTopRatedMovieList();
+
 }

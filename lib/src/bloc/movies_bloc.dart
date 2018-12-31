@@ -18,6 +18,12 @@ class MoviesBloc {
     _moviesFetcher.close();
   }
 
+  fetchTopRatedMovies() async{
+    Result model = await _moviesRepository.fetchTopRatedMovies();
+    print(' i am here: ' + model.results.length.toString());
+    _moviesFetcher.sink.add(model);
+  }
+
 }
 
 final bloc = MoviesBloc();

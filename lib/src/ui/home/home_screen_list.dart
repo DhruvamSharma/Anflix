@@ -2,19 +2,29 @@ import 'package:flutter/material.dart';
 import 'package:popular_movies/src/bloc/movies_bloc.dart';
 import 'package:popular_movies/src/ui/detail/detail.dart';
 import '../../models/result.dart';
-import 'package:rxdart/rxdart.dart';
 
 class HomeScreenList extends StatefulWidget {
+
+  final GestureTapCallback callback;
+
+  HomeScreenList({@required this.callback}): assert(callback != null);
+
   @override
-  createState() => HomeScreenListState();
+  createState() => HomeScreenListState(callback);
 }
 
 class HomeScreenListState extends State<HomeScreenList> {
+
+  final GestureTapCallback callback;
+
+  HomeScreenListState(this.callback);
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    print("init");
     bloc.fetchAllMovies();
   }
 
@@ -27,25 +37,34 @@ class HomeScreenListState extends State<HomeScreenList> {
   @override
   Widget build(BuildContext context) {
 
-    final streamBuilder = StreamBuilder(
-        builder: (BuildContext context, AsyncSnapshot<Result> snapshot) {
-          if(snapshot.hasData) {
-            return buildList(snapshot);
-          } else if(snapshot.hasError) {
-            return Text('Error!!');
-          }
+    return StreamBuilder(
+      builder: (BuildContext context, AsyncSnapshot<Result> snapshot) {
+        if(snapshot.hasData) {
+          print("now here");
+          return buildList(snapshot);
+        } else if(snapshot.hasError) {
+          return Text('Error!!');
+        }
 
-          return Center(
-              child: CircularProgressIndicator(),
-          );
-        },
-        stream: bloc.allMovies,
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
+      stream: bloc.allMovies,
     );
-
-    return streamBuilder;
   }
 
 
+  @override
+  void didUpdateWidget(HomeScreenList oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+
+    setState((){
+      print("new state");
+    });
+
+  }
 
   Widget buildList(AsyncSnapshot<Result> snapshot) {
 
@@ -94,8 +113,6 @@ class HomeScreenListState extends State<HomeScreenList> {
       }),
     );
   }
-
-
 
 
 
