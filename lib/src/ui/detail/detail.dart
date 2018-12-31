@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:popular_movies/src/bloc/similar_movies_bloc.dart';
 import 'package:popular_movies/src/models/item_model.dart';
+import 'package:popular_movies/src/models/result.dart';
 
 class DetailScreen extends StatelessWidget {
 
@@ -14,6 +16,42 @@ class DetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
 
+    final bloc = SimilarMoviesBloc();
+
+    var loadingChild = <Widget>[
+      Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Text(
+              model.title,
+              style: TextStyle(
+                fontSize: 24,
+                color: Colors.grey,
+              ),
+            ),
+            Text(model.release_date,
+              style: TextStyle(color: Colors.green),
+            ),
+            Text(model.overview,
+              style: TextStyle(color: Colors.grey),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 8.0),
+              child: Text('More Like this',
+                style: TextStyle(fontSize: 16,
+                    color: Colors.red),
+              ),
+            ),
+            Center(
+              child: CircularProgressIndicator(),
+            )
+            //similarMoviesGrid(model.genre_ids),
+          ],
+        ),
+      ),
+    ];
 
     var child = <Widget>[
           Padding(
@@ -27,15 +65,22 @@ class DetailScreen extends StatelessWidget {
                     fontSize: 24,
                     color: Colors.grey,
                   ),
+                  maxLines: 1,
                 ),
-                Text(model.release_date),
-                Text(model.overview),
-                Text(model.overview),
-                Text(model.overview),
-                Text(model.overview),
-                Text(model.overview),
-                Text(model.overview),
-                similarMoviesGrid(model.genre_ids),
+                Text(model.release_date,
+                  style: TextStyle(color: Colors.green),
+                ),
+                Text(model.overview,
+                style: TextStyle(color: Colors.grey),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 8.0),
+                  child: Text('More Like this',
+                  style: TextStyle(fontSize: 16,
+                  color: Colors.red),
+                  ),
+                ),
+                //similarMoviesGrid(model.genre_ids),
               ],
             ),
           ),
@@ -53,33 +98,81 @@ class DetailScreen extends StatelessWidget {
       ),
     );
 
-    return Scaffold(
-      body: CustomScrollView(
-        slivers: <Widget>[
-          SliverAppBar(
-            pinned: true,
-            expandedHeight: 300.0, // TODO: check out later
-            flexibleSpace: FlexibleSpaceBar(
-              background: background,
+
+
+
+    return FutureBuilder<Result>(
+      builder: (BuildContext context, snapshot) {
+        if(!snapshot.hasData) {
+          return Scaffold(
+            backgroundColor: Theme.of(context).primaryColor,
+            body: CustomScrollView(
+              slivers: <Widget>[
+                SliverAppBar(
+                  pinned: true,
+                  expandedHeight: 300.0, // TODO: check out later
+                  flexibleSpace: FlexibleSpaceBar(
+                    title: Text(model.title,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    centerTitle: true,
+                    background: background,
+                  ),
+                ),
+
+                SliverList(delegate: SliverChildListDelegate(loadingChild)),
+              ],
+
             ),
+          );
+        }
+
+        return Scaffold(
+          backgroundColor: Theme.of(context).primaryColor,
+          body: CustomScrollView(
+            slivers: <Widget>[
+              SliverAppBar(
+                pinned: true,
+                expandedHeight: 300.0, // TODO: check out later
+                flexibleSpace: FlexibleSpaceBar(
+                  title: Text(model.title),
+                  centerTitle: true,
+                  background: background,
+                ),
+              ),
+
+              SliverList(delegate: SliverChildListDelegate(child)),
+              _mySimilarMovies(snapshot.data),
+            ],
+
           ),
-          
-          SliverList(delegate: SliverChildListDelegate(child))
+        );
+      },
+      future: bloc.fetchAllMovies(model.genre_ids),
 
-
-        ],
-
-      ),
     );
-
-
-
-
 
   }
 
-  similarMoviesGrid(List<int> genre_ids) {
-    //Code a Grid Widget here
+  SliverGrid _mySimilarMovies(Result data) {
+
+    return SliverGrid(
+        delegate: SliverChildBuilderDelegate((context, index) {
+          return Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Image.network('https://image.tmdb.org/t/p/w185${data
+                .results[index].poster_path}',
+              fit: BoxFit.cover,
+            ),
+          );
+        },
+        childCount: data.results.length,
+        ),
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+    );
+
+
 
   }
 
