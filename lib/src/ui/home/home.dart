@@ -11,6 +11,8 @@ class HomeScreenState extends State<HomeScreen> {
 
   var bloc = MoviesBloc();
 
+  var label = 'show';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,7 +32,7 @@ class HomeScreenState extends State<HomeScreen> {
           )
         ],
       ),
-      body: HomeScreenList(callback: modalBottomSheetMenu),
+      body: HomeScreenList(),
     );
   }
 

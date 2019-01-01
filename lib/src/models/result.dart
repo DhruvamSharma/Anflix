@@ -16,6 +16,9 @@ class Result {
       ItemModel result = ItemModel(parsedJson['results'][i]);
       temp.add(result);
     }
+
+
+
     _results = temp;
   }
 

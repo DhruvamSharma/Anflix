@@ -4,25 +4,13 @@ import 'package:popular_movies/src/ui/detail/detail.dart';
 import '../../models/result.dart';
 
 class HomeScreenList extends StatefulWidget {
-
-  final GestureTapCallback callback;
-
-  HomeScreenList({@required this.callback}): assert(callback != null);
-
   @override
-  createState() => HomeScreenListState(callback);
+  createState() => HomeScreenListState();
 }
 
 class HomeScreenListState extends State<HomeScreenList> {
-
-  final GestureTapCallback callback;
-
-  HomeScreenListState(this.callback);
-
-
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     print("init");
     bloc.fetchAllMovies();
@@ -36,13 +24,12 @@ class HomeScreenListState extends State<HomeScreenList> {
 
   @override
   Widget build(BuildContext context) {
-
     return StreamBuilder(
-      builder: (BuildContext context, AsyncSnapshot<Result> snapshot) {
-        if(snapshot.hasData) {
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
           print("now here");
           return buildList(snapshot);
-        } else if(snapshot.hasError) {
+        } else if (snapshot.hasError) {
           return Text('Error!!');
         }
 
@@ -50,27 +37,21 @@ class HomeScreenListState extends State<HomeScreenList> {
           child: CircularProgressIndicator(),
         );
       },
-      stream: bloc.allMovies,
+      stream: bloc.newResults,
     );
   }
-
 
   @override
   void didUpdateWidget(HomeScreenList oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-
-    setState((){
-      print("new state");
-    });
-
+    setState(() {});
   }
 
   Widget buildList(AsyncSnapshot<Result> snapshot) {
-
     var crossAxisCount;
 
-    if(MediaQuery.of(context).orientation == Orientation.portrait) {
+    if (MediaQuery.of(context).orientation == Orientation.portrait) {
       crossAxisCount = 2;
     } else {
       crossAxisCount = 3;
@@ -79,23 +60,23 @@ class HomeScreenListState extends State<HomeScreenList> {
     return GridView.builder(
         itemCount: snapshot.data.results.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
+          crossAxisCount: crossAxisCount,
         ),
         itemBuilder: (BuildContext context, int index) {
-          if(index == 0) {
-            crossAxisCount = 1;
-          }
           return Hero(
             tag: snapshot.data.results[index].id,
             transitionOnUserGestures: true,
-            child: GestureDetector(
-              onTap: () {
-                moveToDetailScreen(index, snapshot.data);
-              },
-              child: Image.network(
-                'https://image.tmdb.org/t/p/w185${snapshot.data
-                    .results[index].poster_path}',
-                fit: BoxFit.cover,
+            child: Material(
+              child: InkWell(
+                onTap: () {
+                  moveToDetailScreen(index, snapshot.data);
+                },
+                splashColor: Colors.red,
+                child: Image.network(
+                  'https://image.tmdb.org/t/p/w185'
+                      '${snapshot.data.results[index].poster_path}',
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
           );
@@ -103,7 +84,6 @@ class HomeScreenListState extends State<HomeScreenList> {
   }
 
   moveToDetailScreen(int index, Result model) {
-
     Navigator.push(
       context,
       MaterialPageRoute(builder: (context) {
@@ -113,7 +93,4 @@ class HomeScreenListState extends State<HomeScreenList> {
       }),
     );
   }
-
-
-
 }
