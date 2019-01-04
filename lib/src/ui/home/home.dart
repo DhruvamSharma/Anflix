@@ -18,7 +18,6 @@ class HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Popular Movies',
-        style: TextStyle(color: Colors.red),
         ),
         brightness: Brightness.dark,
         centerTitle: true,

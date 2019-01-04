@@ -44,8 +44,8 @@ class HomeScreenListState extends State<HomeScreenList> {
   @override
   void didUpdateWidget(HomeScreenList oldWidget) {
     super.didUpdateWidget(oldWidget);
-
-    setState(() {});
+    //initState();
+    print("we are here");
   }
 
   Widget buildList(AsyncSnapshot<Result> snapshot) {
