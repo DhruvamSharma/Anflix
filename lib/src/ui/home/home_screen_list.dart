@@ -27,7 +27,7 @@ class HomeScreenListState extends State<HomeScreenList> {
     return StreamBuilder(
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          print("now here");
+          print(snapshot.data.toString());
           return buildList(snapshot);
         } else if (snapshot.hasError) {
           return Text('Error!!');
