@@ -1,34 +1,40 @@
 import 'dart:async';
 import 'dart:convert';
-import 'package:http/http.dart' show Client;
+import 'package:http/http.dart' show Client, Response;
 import 'package:popular_movies/src/models/result.dart';
 
 
 class MovieApiProvider {
 
   final _client = Client();
-  static final _api_key  = '5d5b4588dc71d0e50c29f2caa9221fa0';
-  final _url = 'http://api.themoviedb.org/3/movie/popular?api_key=$_api_key';
-  final _top_rated= 'http://api.themoviedb.org/3/movie/top_rated?api_key=$_api_key';
+  static final _apiKey  = '5d5b4588dc71d0e50c29f2caa9221fa0';
+  final _url = 'http://api.themoviedb.org/3/movie/popular?api_key=$_apiKey';
+  final _topRated= 'http://api.themoviedb.org/3/movie/top_rated?api_key=$_apiKey';
 
   final _similarMoviesListUrl = 'https://api.themoviedb.org/3/discover/movie?api_key=5d5b4588dc71d0e50c29f2caa9221fa0&genres=';
 
 
   Future<Result> fetchMovieList() async {
-    final response = await _client.get(_url);
+    Response response;
+    try {
+      response = await _client.get(_url);
+    } catch(e) {
+       response = Response("", 401);
+    }
     if(response.statusCode == 200) {
+      print("regular movie data fetched from the internet from api provider");
       return Result.fromJson(json.decode(response.body));
     } else {
-      throw Exception('failed to  fetch movies');
+      return null;
     }
 
   }
 
   Future<Result> fetchTopRatedMovieList() async {
 
-    final response = await _client.get(_top_rated);
+    final response = await _client.get(_topRated);
     if(response.statusCode == 200) {
-      print("here");
+      print("top rated data fetched from the internet from api provider");
       return Result.fromJson(json.decode(response.body));
     } else {
       throw Exception('failed to  fetch movies');
@@ -38,20 +44,15 @@ class MovieApiProvider {
 
   Future<Result> fetchMoviesLikeThis(List<int> genreIds) async {
 
-    var genres_list = '';
+    var genresList = '';
 
     for(int i = 0; i< genreIds.length; i++) {
-      genres_list += genreIds[i].toString();
-      genres_list += ',';
+      genresList += genreIds[i].toString();
+      genresList += ',';
     }
-
-    print('genrelist: '+  genres_list);
-    print('\n');
-    print(_similarMoviesListUrl+ '{$genres_list}');
-
-    final response = await _client.get(_similarMoviesListUrl+ '{$genres_list}');
-
+    final response = await _client.get(_similarMoviesListUrl+ '{$genresList}');
     if(response.statusCode == 200) {
+      print("similar movies data fetched from the internet from api provider");
       return Result.fromJson(json.decode(response.body));
     } else {
       throw Exception('failed to load');

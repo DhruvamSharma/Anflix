@@ -8,10 +8,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeScreenState extends State<HomeScreen> {
-
   var bloc = MoviesBloc();
-
-  var label = 'show';
 
   @override
   Widget build(BuildContext context) {

@@ -24,15 +24,14 @@ class HomeScreenListState extends State<HomeScreenList> {
 
   @override
   Widget build(BuildContext context) {
-    return StreamBuilder(
+    return StreamBuilder<Result>(
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          print(snapshot.data.toString());
+          print('new data is here');
           return buildList(snapshot);
         } else if (snapshot.hasError) {
-          return Text('Error!!');
+          return Text('Error while fetching movie data!!');
         }
-
         return Center(
           child: CircularProgressIndicator(),
         );
@@ -45,7 +44,7 @@ class HomeScreenListState extends State<HomeScreenList> {
   void didUpdateWidget(HomeScreenList oldWidget) {
     super.didUpdateWidget(oldWidget);
     //initState();
-    print("we are here");
+    print("updating list widget in home screen");
   }
 
   Widget buildList(AsyncSnapshot<Result> snapshot) {

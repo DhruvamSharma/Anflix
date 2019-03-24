@@ -7,7 +7,10 @@ class SimilarMoviesBloc {
 
   final repository = MoviesRepository();
 
-  Future<Result> fetchAllMovies(genreIds) async => await repository.fetchAllSimilarMovies(genreIds);
+  Future<Result> fetchAllMovies(genreIds) async {
+    print("adding similar movies data to sink");
+    return await repository.fetchAllSimilarMovies(genreIds);
+  }
 
 }
 

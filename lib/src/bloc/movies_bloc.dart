@@ -14,14 +14,22 @@ class MoviesBloc {
 
   Observable<Result> get newResults => _moviesFetcher.stream;
 
-  fetchAllMovies() async {
-    Result model = await _moviesRepository.fetchAllMovies();
-    allMovies.add(model);
+  fetchAllMovies()  {
+    Future<dynamic> model = _moviesRepository.fetchAllMovies();
+    if(model != null) {
+      model.then((value) {
+        print("adding all movies data to sink");
+        allMovies.add(value);
+      }).catchError((error) {
+        allMovies.add(error);
+      });
+    } else {
+    }
   }
 
   fetchTopRatedMovies() async{
     Result model = await _moviesRepository.fetchTopRatedMovies();
-    print(' i am here: ' + model.results.length.toString());
+    print("adding top rated movies data to sink");
     allMovies.add(model);
   }
 
@@ -36,9 +44,8 @@ class MoviesBloc {
 
 
   void _handle(Result event) {
-
+    print("adding response to the sink");
     _moviesFetcher.add(event);
-
   }
 }
 
