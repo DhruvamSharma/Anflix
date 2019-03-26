@@ -40,13 +40,6 @@ class HomeScreenListState extends State<HomeScreenList> {
     );
   }
 
-  @override
-  void didUpdateWidget(HomeScreenList oldWidget) {
-    super.didUpdateWidget(oldWidget);
-    //initState();
-    print("updating list widget in home screen");
-  }
-
   Widget buildList(AsyncSnapshot<Result> snapshot) {
     var crossAxisCount;
 

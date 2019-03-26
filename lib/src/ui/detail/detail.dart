@@ -136,7 +136,9 @@ class DetailScreen extends StatelessWidget {
                 pinned: true,
                 expandedHeight: 300.0, // TODO: check out later
                 flexibleSpace: FlexibleSpaceBar(
-                  title: Text(model.title),
+                  title: Text(model.title,
+                  style: TextStyle(
+                  ),),
                   centerTitle: true,
                   background: background,
                 ),

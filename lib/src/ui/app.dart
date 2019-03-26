@@ -7,9 +7,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Popular Movies',
       debugShowCheckedModeBanner: false,
-      theme: ThemeData.light().copyWith(
-        primaryColor: Colors.black,
-        brightness: Brightness.dark,
+      theme: ThemeData(
+        fontFamily: 'NotoSans',
+        brightness: Brightness.light,
+        canvasColor: Colors.black,
+        primaryColor: Colors.black
       ),
       home: HomeScreen(),
     );
